@@ -52,11 +52,6 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
 
         // Preserve original title.
         var originalTitle = m.Title;
-        Regex regex = new Regex(@"^\d+");
-        Match match = regex.Match(m.Title); // 进行匹配操作
-        if (match.Success) { // 判断是否成功匹配到了数字部分
-            m.Title = m.Title.Substring(match.Length);
-        }
 
         // Convert to real actor names.
         if (Configuration.EnableRealActorNames)
@@ -305,7 +300,11 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         var sb = parameters.Where(kvp => template.Contains(kvp.Key))
             .Aggregate(new StringBuilder(template),
                 (sb, kvp) => sb.Replace(kvp.Key, kvp.Value));
-
+        Regex regex = new Regex(@"^\d+");
+        Match match = regex.Match(sb); // 进行匹配操作
+        if (match.Success) { // 判断是否成功匹配到了数字部分
+            sb = sb.Substring(match.Length);
+        }
         return sb.ToString().Trim();
     }
 }
