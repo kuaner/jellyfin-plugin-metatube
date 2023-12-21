@@ -55,7 +55,7 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         Regex regex = new Regex(@"^\d+");
         Match match = regex.Match(originalTitle); // 进行匹配操作
         if (match.Success) { // 判断是否成功匹配到了数字部分
-            originalTitle.Substring(match.Length)
+            originalTitle.Substring(match.Length);
         }
 
         // Convert to real actor names.
