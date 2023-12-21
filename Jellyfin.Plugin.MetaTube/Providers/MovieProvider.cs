@@ -306,6 +306,6 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         if (match.Success) { // 判断是否成功匹配到了数字部分
             ret = ret.Substring(match.Length);
         }
-        return ret
+        return ret;
     }
 }
