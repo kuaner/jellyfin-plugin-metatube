@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using Jellyfin.Plugin.MetaTube.Configuration;
 using Jellyfin.Plugin.MetaTube.Extensions;
 using Jellyfin.Plugin.MetaTube.Metadata;
@@ -51,6 +52,11 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
 
         // Preserve original title.
         var originalTitle = m.Title;
+        Regex regex = new Regex(@"^\d+");
+        Match match = regex.Match(originalTitle); // 进行匹配操作
+        if (match.Success) { // 判断是否成功匹配到了数字部分
+            originalTitle.Substring(match.Length)
+        }
 
         // Convert to real actor names.
         if (Configuration.EnableRealActorNames)
@@ -84,7 +90,7 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
             { @"{provider}", m.Provider },
             { @"{id}", m.Id },
             { @"{number}", m.Number },
-            { @"{title}", m.Title },
+            { @"{title}", originalTitle },
             { @"{series}", m.Series },
             { @"{maker}", m.Maker },
             { @"{label}", m.Label },
