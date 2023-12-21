@@ -300,11 +300,12 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         var sb = parameters.Where(kvp => template.Contains(kvp.Key))
             .Aggregate(new StringBuilder(template),
                 (sb, kvp) => sb.Replace(kvp.Key, kvp.Value));
+        var ret = sb.ToString().Trim();
         Regex regex = new Regex(@"^\d+");
-        Match match = regex.Match(sb); // 进行匹配操作
+        Match match = regex.Match(ret); // 进行匹配操作
         if (match.Success) { // 判断是否成功匹配到了数字部分
-            sb = sb.Substring(match.Length);
+            ret = ret.Substring(match.Length);
         }
-        return sb.ToString().Trim();
+        return ret
     }
 }
