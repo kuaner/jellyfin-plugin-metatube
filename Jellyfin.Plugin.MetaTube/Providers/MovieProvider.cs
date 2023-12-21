@@ -53,9 +53,9 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         // Preserve original title.
         var originalTitle = m.Title;
         Regex regex = new Regex(@"^\d+");
-        Match match = regex.Match(originalTitle); // 进行匹配操作
+        Match match = regex.Match(m.Title); // 进行匹配操作
         if (match.Success) { // 判断是否成功匹配到了数字部分
-            originalTitle.Substring(match.Length);
+            m.Title = m.Title.Substring(match.Length);
         }
 
         // Convert to real actor names.
@@ -90,7 +90,7 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
             { @"{provider}", m.Provider },
             { @"{id}", m.Id },
             { @"{number}", m.Number },
-            { @"{title}", originalTitle },
+            { @"{title}", m.Title },
             { @"{series}", m.Series },
             { @"{maker}", m.Maker },
             { @"{label}", m.Label },
