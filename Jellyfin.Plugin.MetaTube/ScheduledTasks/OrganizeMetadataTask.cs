@@ -94,13 +94,6 @@ public class OrganizeMetadataTask : IScheduledTask
                             await SetPrimaryImage(item, Plugin.Instance.Configuration.BadgeUrl, cancellationToken);
                         break;
                     }
-                    case true when genres.Contains(ChineseSubtitle):
-                    {
-                    // force add badges
-                        if (Plugin.Instance.Configuration.EnableBadges)
-                            await SetPrimaryImage(item, Plugin.Instance.Configuration.BadgeUrl, cancellationToken);
-                        break;
-                    }
                     // Remove `ChineseSubtitle` genre.
                     case false when genres.Contains(ChineseSubtitle):
                     {
