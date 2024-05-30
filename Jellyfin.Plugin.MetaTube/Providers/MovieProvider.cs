@@ -14,6 +14,7 @@ using MovieInfo = MediaBrowser.Controller.Providers.MovieInfo;
 using MediaBrowser.Model.Logging;
 
 #else
+using Jellyfin.Data.Enums;
 using Microsoft.Extensions.Logging;
 #endif
 
@@ -156,18 +157,27 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
             result.AddPerson(new PersonInfo
             {
                 Name = m.Director,
+#if __EMBY__
                 Type = PersonType.Director
+#else
+                Type = PersonKind.Director
+#endif
             });
 
         // Add actors.
         foreach (var name in m.Actors ?? Enumerable.Empty<string>())
         {
-            result.AddPerson(new PersonInfo
+            var actor = new PersonInfo
             {
                 Name = name,
+#if __EMBY__
                 Type = PersonType.Actor,
-                ImageUrl = await GetActorImageUrl(name, cancellationToken)
-            });
+#else
+                Type = PersonKind.Actor,
+#endif
+            };
+            await SetActorImageUrl(actor, cancellationToken);
+            result.AddPerson(actor);
         }
 
         return result;
@@ -234,21 +244,22 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         return results;
     }
 
-    private async Task<string> GetActorImageUrl(string name, CancellationToken cancellationToken)
+    private async Task SetActorImageUrl(PersonInfo actor, CancellationToken cancellationToken)
     {
         try
         {
             // Use GFriends as actor image provider.
-            foreach (var actor in (await ApiClient.SearchActorAsync(name, GFriends, false, cancellationToken))
-                     .Where(actor => actor.Images?.Any() == true))
-                return actor.Images.First();
+            foreach (var result in (await ApiClient.SearchActorAsync(actor.Name, GFriends, false, cancellationToken))
+                     .Where(result => result.Images?.Any() == true))
+            {
+                actor.ImageUrl = result.Images.First();
+                actor.SetPid(Name, GFriends, actor.Name);
+            }
         }
         catch (Exception e)
         {
-            Logger.Error("Get actor image error: {0} ({1})", name, e.Message);
+            Logger.Error("Get actor image error: {0} ({1})", actor.Name, e.Message);
         }
-
-        return string.Empty;
     }
 
     private async Task ConvertToRealActorNames(MovieSearchResult m, CancellationToken cancellationToken)

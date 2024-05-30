@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Configurations>Debug;Release;Debug.Emby;Release.Emby</Configurations>
         <Platforms>AnyCPU</Platforms>
         <AssemblyName>MetaTube</AssemblyName>
         <Authors>MetaTube</Authors>
-        <Description>Meta Tube Plugin for Jellyfin/Emby</Description>
+        <Description>MetaTube Plugin for Jellyfin/Emby</Description>
         <Version>$([System.DateTime]::UtcNow.ToString(yyyy.Mdd.Hmm.0))</Version>
         <Copyright>Copyright © 2023 MetaTube</Copyright>
         <RepositoryType>Git</RepositoryType>
@@ -20,6 +19,11 @@
         <Product>MetaTube</Product>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <TargetFramework Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">net8.0</TargetFramework>
+        <TargetFramework Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">net6.0</TargetFramework>
+    </PropertyGroup>
+
     <PropertyGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
         <DefineConstants>__EMBY__</DefineConstants>
     </PropertyGroup>
@@ -29,8 +33,8 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug' or '$(Configuration)'=='Release'">
-        <PackageReference Include="Jellyfin.Controller" Version="10.8.0"/>
-        <PackageReference Include="Jellyfin.Model" Version="10.8.0"/>
+        <PackageReference Include="Jellyfin.Controller" Version="10.9.0"/>
+        <PackageReference Include="Jellyfin.Model" Version="10.9.0"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'=='Debug.Emby' or '$(Configuration)'=='Release.Emby'">
