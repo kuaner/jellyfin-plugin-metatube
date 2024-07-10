@@ -144,7 +144,7 @@ public class OrganizeMetadataTask : IScheduledTask
     private static bool HasTag(string filename, string tag)
     {
         // 检查是否以 tag 结尾
-        return endsWithTag = filename.EndsWith(tag, StringComparison.OrdinalIgnoreCase);
+        return filename.EndsWith(tag, StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool HasTag(string filename, params string[] tags)
