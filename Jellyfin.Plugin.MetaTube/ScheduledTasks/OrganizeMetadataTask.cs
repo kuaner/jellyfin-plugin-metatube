@@ -143,8 +143,8 @@ public class OrganizeMetadataTask : IScheduledTask
 
     private static bool HasTag(string filename, string tag)
     {
-        var r = new Regex(@"[-_\s]", RegexOptions.Compiled);
-        return r.Split(filename).Contains(tag, StringComparer.OrdinalIgnoreCase);
+        // 检查是否以 tag 结尾
+        return filename.EndsWith(tag, StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool HasTag(string filename, params string[] tags)
@@ -157,7 +157,7 @@ public class OrganizeMetadataTask : IScheduledTask
         if (string.IsNullOrWhiteSpace(filename))
             return false;
 
-        return filename.Contains(ChineseSubtitle) || HasTag(filename, "C", "UC", "ch");
+        return filename.Contains(ChineseSubtitle) || HasTag(filename, "-C", "-UC", "ch");
     }
 
     private static bool HasExternalChineseSubtitle(string path)
