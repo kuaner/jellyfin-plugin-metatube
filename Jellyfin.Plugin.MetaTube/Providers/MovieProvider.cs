@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.RegularExpressions;
 using Jellyfin.Plugin.MetaTube.Configuration;
 using Jellyfin.Plugin.MetaTube.Extensions;
 using Jellyfin.Plugin.MetaTube.Metadata;
@@ -326,6 +327,13 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
             .Aggregate(new StringBuilder(template),
                 (sb, kvp) => sb.Replace(kvp.Key, kvp.Value));
 
-        return sb.ToString().Trim();
+        string ret = sb.ToString().Trim();
+        // 去掉字母前的数字部分
+        ret = Regex.Replace(ret, @"^\d+(?=[A-Za-z]+-\d+)", string.Empty);
+
+        // 去掉被【】或者[]包裹的内容
+        ret = Regex.Replace(ret, @"【[^】]*】|\[[^\]]*\]", string.Empty);
+
+        return ret;
     }
 }
